@@ -27,4 +27,15 @@ repositories {
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+	//导入log4j使用的包
+	compile 'org.springframework.boot:spring-boot-starter-log4j2:1.5.10.RELEASE'
+	//导入swagger相关包
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
 }
+configurations {
+	//移除starter-loging避免与log4j冲突
+	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
