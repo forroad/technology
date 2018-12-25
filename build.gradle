@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	//导入log4j使用的包
@@ -33,6 +34,8 @@ dependencies {
 	//导入swagger相关包
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+	//导入SqlServer相关包
+	compile "com.microsoft.sqlserver:mssql-jdbc:6.1.0.jre8"
 }
 configurations {
 	//移除starter-loging避免与log4j冲突
