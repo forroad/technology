@@ -15,7 +15,8 @@ public class Award {
     @ApiModelProperty("奖项ID")
     private int id;
     @ApiModelProperty("获奖者ID")
-    private int mentorId;
+    @OneToOne(targetEntity = Mentor.class)
+    private Mentor mentor;
     @ApiModelProperty("获奖排名")
     private String awardRank;
     @ApiModelProperty("获奖时间")
@@ -38,12 +39,12 @@ public class Award {
         this.id = id;
     }
 
-    public int getMentorId() {
-        return mentorId;
+    public Mentor getMentor() {
+        return mentor;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
     }
 
     public String getAwardRank() {

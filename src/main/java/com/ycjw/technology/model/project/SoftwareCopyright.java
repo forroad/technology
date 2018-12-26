@@ -31,7 +31,8 @@ public class SoftwareCopyright {
     @ApiModelProperty("软件著作权照片")
     private String patentPhoto;
     @ApiModelProperty("产生软件著作权项目")
-    private int projectId;
+    @OneToOne(targetEntity = Project.class)
+    private Project project;
 
     public int getId() {
         return id;
@@ -105,11 +106,11 @@ public class SoftwareCopyright {
         this.patentPhoto = patentPhoto;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

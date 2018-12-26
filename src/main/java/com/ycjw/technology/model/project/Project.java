@@ -19,10 +19,10 @@ public class Project {
     private int id;
     @ApiModelProperty("项目名称")
     private String name;
-    @ApiModelProperty("项目负责人Id")
-    private int mentorId;
+    @ApiModelProperty("项目负责人")
+    private String username;
     @ApiModelProperty("参与导师")
-    @Transient
+    @OneToMany(targetEntity = Mentor.class)
     private List<Mentor> mentors;
     @ApiModelProperty("项目开始时间")
     private Timestamp startTime;
@@ -31,7 +31,7 @@ public class Project {
     @ApiModelProperty("项目经费")
     private double funding;
     @ApiModelProperty("项目经费安排")
-    @Transient
+    @OneToMany(targetEntity = Deal.class)
     private List<Deal> deals;
     @ApiModelProperty("项目描述")
     private String projectDetail;
@@ -40,7 +40,7 @@ public class Project {
     @ApiModelProperty("项目是否完成")
     private Boolean isFinsh = false;
     @ApiModelProperty("项目成果")
-    @Transient
+    @OneToOne(targetEntity = Result.class)
     private Result result;
 
     public int getId() {
@@ -59,12 +59,12 @@ public class Project {
         this.name = name;
     }
 
-    public int getMentorId() {
-        return mentorId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public List<Mentor> getMentors() {

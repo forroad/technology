@@ -14,9 +14,11 @@ public class Deal {
     @ApiModelProperty("专利ID")
     private int id;
     @ApiModelProperty("安排导师ID")
-    private int mentorId;
+    @OneToOne(targetEntity = Mentor.class)
+    private Mentor mentor;
     @ApiModelProperty("项目id")
-    private int projectId;
+    @OneToOne(targetEntity = Project.class)
+    private Project project;
     @ApiModelProperty("分配的经费")
     private double funding;
     @ApiModelProperty("任务描述")
@@ -28,14 +30,6 @@ public class Deal {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
     }
 
     public double getFunding() {
@@ -54,11 +48,19 @@ public class Deal {
         this.task = task;
     }
 
-    public int getMentorId() {
-        return mentorId;
+    public Mentor getMentor() {
+        return mentor;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

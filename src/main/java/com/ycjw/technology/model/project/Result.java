@@ -15,10 +15,10 @@ public class Result {
     @ApiModelProperty("成果介绍")
     private String resultDetail;
     @ApiModelProperty("专利集合")
-    @OneToMany
+    @OneToMany(targetEntity = Patent.class)
     private List<Patent> patents;
     @ApiModelProperty("软件著作权")
-    @Transient
+    @OneToMany(targetEntity = SoftwareCopyright.class)
     private List<SoftwareCopyright> softwareCopyrights;
 
     public int getId() {
