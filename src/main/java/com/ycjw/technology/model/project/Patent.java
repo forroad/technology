@@ -1,5 +1,6 @@
 package com.ycjw.technology.model.project;
 
+import com.ycjw.technology.model.request.project.AddPatent;
 import com.ycjw.technology.model.user.Mentor;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Reference;
@@ -29,10 +30,21 @@ public class Patent
     private Timestamp authorizationTime;
     @ApiModelProperty("专利证书照片")
     private String patentPhoto;
-    @ApiModelProperty("产生专利项目")
-    @OneToOne(targetEntity = Project.class)
-    private Project project;
+    @ApiModelProperty("产生专利项目id")
+    private int projectId;
 
+    public Patent() {
+    }
+
+    public Patent(AddPatent addPatent) {
+        this.name = addPatent.getName();
+        this.creater = addPatent.getCreater();
+        this.patentId = addPatent.getPatentId();
+        this.applyTime = addPatent.getApplyTime();
+        this.patentee = addPatent.getPatentee();
+        this.authorizationTime = addPatent.getAuthorizationTime();
+        this.projectId = addPatent.getProjectId();
+    }
 
     public int getId() {
         return id;
@@ -98,11 +110,11 @@ public class Patent
         this.patentPhoto = patentPhoto;
     }
 
-    public Project getProject() {
-        return project;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

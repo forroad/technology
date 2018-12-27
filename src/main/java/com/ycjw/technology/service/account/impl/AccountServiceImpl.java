@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Base64;
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
     @Autowired
     AdminDao adminDao;

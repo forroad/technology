@@ -1,11 +1,12 @@
 package com.ycjw.technology.controller.test;
 
+import com.ycjw.technology.exception.ExceptionZyc;
 import com.ycjw.technology.model.user.User;
 import com.ycjw.technology.repository.test.TestDao;
+import com.ycjw.technology.service.project.impl.ProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -19,5 +20,9 @@ public class TestController {
         return "test";
     }
 
+    @PutMapping("uploadImg")
+    public String uploadImg(@RequestParam(value = "file") MultipartFile multipartFile) throws ExceptionZyc {
+        return  ProjectServiceImpl.saveImg(multipartFile);
+    }
 
 }

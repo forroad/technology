@@ -1,5 +1,6 @@
 package com.ycjw.technology.model.project;
 
+import com.ycjw.technology.model.request.project.AddSoftwareCopyright;
 import com.ycjw.technology.model.user.Mentor;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Reference;
@@ -29,10 +30,23 @@ public class SoftwareCopyright {
     @ApiModelProperty("登记号")
     private String softwareId;
     @ApiModelProperty("软件著作权照片")
-    private String patentPhoto;
-    @ApiModelProperty("产生软件著作权项目")
-    @OneToOne(targetEntity = Project.class)
-    private Project project;
+    private String softwareCopyrightPhoto;
+    @ApiModelProperty("产生软件著作权项目Id")
+    private int projectId;
+
+    public SoftwareCopyright() {
+    }
+
+    public SoftwareCopyright(AddSoftwareCopyright addSoftwareCopyright) {
+        this.name = addSoftwareCopyright.getName();
+        this.copyrightOwner = addSoftwareCopyright.getCopyrightOwner();
+        this.finishTime = addSoftwareCopyright.getFinishTime();
+        this.publishTime = addSoftwareCopyright.getPublishTime();
+        this.AuthorizationWay = addSoftwareCopyright.getAuthorizationWay();
+        this.RightRange = addSoftwareCopyright.getRightRange();
+        this.softwareId = addSoftwareCopyright.getSoftwareId();
+        this.projectId = addSoftwareCopyright.getProjectId();
+    }
 
     public int getId() {
         return id;
@@ -98,19 +112,19 @@ public class SoftwareCopyright {
         this.softwareId = softwareId;
     }
 
-    public String getPatentPhoto() {
-        return patentPhoto;
+    public String getSoftwareCopyrightPhoto() {
+        return softwareCopyrightPhoto;
     }
 
-    public void setPatentPhoto(String patentPhoto) {
-        this.patentPhoto = patentPhoto;
+    public void setSoftwareCopyrightPhoto(String softwareCopyrightPhoto) {
+        this.softwareCopyrightPhoto = softwareCopyrightPhoto;
     }
 
-    public Project getProject() {
-        return project;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

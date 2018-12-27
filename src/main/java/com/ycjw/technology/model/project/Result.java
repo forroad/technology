@@ -3,7 +3,9 @@ package com.ycjw.technology.model.project;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_result")
@@ -15,11 +17,11 @@ public class Result {
     @ApiModelProperty("成果介绍")
     private String resultDetail;
     @ApiModelProperty("专利集合")
-    @OneToMany(targetEntity = Patent.class)
-    private List<Patent> patents;
+    @ElementCollection
+    private Set<Integer> patentIds = new HashSet<>();
     @ApiModelProperty("软件著作权")
-    @OneToMany(targetEntity = SoftwareCopyright.class)
-    private List<SoftwareCopyright> softwareCopyrights;
+    @ElementCollection
+    private Set<Integer> softwareCopyrightIds = new HashSet<>();
 
     public int getId() {
         return id;
@@ -37,19 +39,19 @@ public class Result {
         this.resultDetail = resultDetail;
     }
 
-    public List<Patent> getPatents() {
-        return patents;
+    public Set<Integer> getPatentIds() {
+        return patentIds;
     }
 
-    public void setPatents(List<Patent> patents) {
-        this.patents = patents;
+    public void setPatentIds(Set<Integer> patentIds) {
+        this.patentIds = patentIds;
     }
 
-    public List<SoftwareCopyright> getSoftwareCopyrights() {
-        return softwareCopyrights;
+    public Set<Integer> getSoftwareCopyrightIds() {
+        return softwareCopyrightIds;
     }
 
-    public void setSoftwareCopyrights(List<SoftwareCopyright> softwareCopyrights) {
-        this.softwareCopyrights = softwareCopyrights;
+    public void setSoftwareCopyrightIds(Set<Integer> softwareCopyrightIds) {
+        this.softwareCopyrightIds = softwareCopyrightIds;
     }
 }

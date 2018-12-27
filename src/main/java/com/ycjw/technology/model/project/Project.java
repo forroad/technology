@@ -1,5 +1,6 @@
 package com.ycjw.technology.model.project;
 
+import com.ycjw.technology.model.request.project.AddProject;
 import com.ycjw.technology.model.user.Mentor;
 import com.ycjw.technology.model.user.User;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +9,9 @@ import org.springframework.data.annotation.Reference;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_project")
@@ -20,10 +23,10 @@ public class Project {
     @ApiModelProperty("项目名称")
     private String name;
     @ApiModelProperty("项目负责人")
-    private String username;
+    private String projectLeader;
     @ApiModelProperty("参与导师")
-    @OneToMany(targetEntity = Mentor.class)
-    private List<Mentor> mentors;
+    @ElementCollection
+    private Set<String> mentorUsernames = new HashSet<>();
     @ApiModelProperty("项目开始时间")
     private Timestamp startTime;
     @ApiModelProperty("项目截止时间")
@@ -31,8 +34,8 @@ public class Project {
     @ApiModelProperty("项目经费")
     private double funding;
     @ApiModelProperty("项目经费安排")
-    @OneToMany(targetEntity = Deal.class)
-    private List<Deal> deals;
+    @ElementCollection
+    private Set<Integer> dealIds = new HashSet<>();
     @ApiModelProperty("项目描述")
     private String projectDetail;
     @ApiModelProperty("项目进度")
@@ -42,6 +45,19 @@ public class Project {
     @ApiModelProperty("项目成果")
     @OneToOne(targetEntity = Result.class)
     private Result result;
+
+    public Project() {
+    }
+
+    public Project(AddProject addProject){
+        this.name = addProject.getName();
+        this.projectLeader = addProject.getProjectLeader();
+        this.mentorUsernames = addProject.getMentorUsernames();
+        this.startTime = addProject.getStartTime();
+        this.lastTime = addProject.getLastTime();
+        this.funding = addProject.getFunding();
+        this.projectDetail = addProject.getProjectDetail();
+    }
 
     public int getId() {
         return id;
@@ -59,20 +75,28 @@ public class Project {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getProjectLeader() {
+        return projectLeader;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setProjectLeader(String projectLeader) {
+        this.projectLeader = projectLeader;
     }
 
-    public List<Mentor> getMentors() {
-        return mentors;
+    public Set<String> getMentorUsernames() {
+        return mentorUsernames;
     }
 
-    public void setMentors(List<Mentor> mentors) {
-        this.mentors = mentors;
+    public void setMentorUsernames(Set<String> mentorUsernames) {
+        this.mentorUsernames = mentorUsernames;
+    }
+
+    public Set<Integer> getDealIds() {
+        return dealIds;
+    }
+
+    public void setDealIds(Set<Integer> dealIds) {
+        this.dealIds = dealIds;
     }
 
     public double getFunding() {
@@ -81,14 +105,6 @@ public class Project {
 
     public void setFunding(double funding) {
         this.funding = funding;
-    }
-
-    public List<Deal> getDeals() {
-        return deals;
-    }
-
-    public void setDeals(List<Deal> deals) {
-        this.deals = deals;
     }
 
     public String getProjectDetail() {
