@@ -19,6 +19,7 @@ public class ExceptionZyc extends Exception {
     public static final ExceptionZyc UPLOAD_FAIL = new ExceptionZyc(new Response("照片上传失败",null));
     public static final ExceptionZyc PATENT_IS_NOT_EXIST = new ExceptionZyc(new Response("专利不存在",null));
     public static final ExceptionZyc SOFTWARECOPYRIGHT_IS_NOT_EXIST = new ExceptionZyc(new Response("软件著作权不存在",null));
+    public static final ExceptionZyc AWARD_IS_NOT_EXIST = new ExceptionZyc(new Response("奖项不存在",null));
     private Response response;
 
     public ExceptionZyc() {

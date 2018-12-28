@@ -20,9 +20,5 @@ public class TestController {
         return "test";
     }
 
-    @PutMapping("uploadImg")
-    public String uploadImg(@RequestParam(value = "file") MultipartFile multipartFile) throws ExceptionZyc {
-        return  ProjectServiceImpl.saveImg(multipartFile);
-    }
 
 }

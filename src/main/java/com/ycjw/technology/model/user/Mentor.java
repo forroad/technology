@@ -5,9 +5,7 @@ import com.ycjw.technology.model.project.Project;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "t_mentor")
@@ -27,23 +25,23 @@ public class Mentor extends User{
     @ApiModelProperty("角色")
     private Role role;
     @OneToMany(targetEntity = Project.class)
-    private List<Project> projects = new ArrayList<>();
+    private Set<Integer> projects = new HashSet<>();
     @OneToMany(targetEntity = Award.class)
-    private List<Award> awards = new ArrayList<>();
+    private Set<Integer> awards = new HashSet<>();
 
-    public List<Project> getProjects() {
+    public Set<Integer> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Set<Integer> projects) {
         this.projects = projects;
     }
 
-    public List<Award> getAwards() {
+    public Set<Integer> getAwards() {
         return awards;
     }
 
-    public void setAwards(List<Award> awards) {
+    public void setAwards(Set<Integer> awards) {
         this.awards = awards;
     }
 

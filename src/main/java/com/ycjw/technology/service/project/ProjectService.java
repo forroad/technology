@@ -1,11 +1,15 @@
 package com.ycjw.technology.service.project;
 
 import com.ycjw.technology.exception.ExceptionZyc;
+import com.ycjw.technology.model.project.Deal;
 import com.ycjw.technology.model.project.Patent;
 import com.ycjw.technology.model.project.Project;
 import com.ycjw.technology.model.project.SoftwareCopyright;
 import com.ycjw.technology.model.request.project.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ProjectService {
     /**
@@ -146,7 +150,7 @@ public interface ProjectService {
      * @return 修改后返回的信息
      * @throws ExceptionZyc 跑出的异常
      */
-    SoftwareCopyright modifySoftwareCopyright(int softwarerightId, MultipartFile softwareCopyrightPhoto) throws ExceptionZyc;
+    SoftwareCopyright modifySoftwareCopyrightPhoto(int softwarerightId, MultipartFile softwareCopyrightPhoto) throws ExceptionZyc;
 
     /**
      *  删除软件著作权
@@ -155,4 +159,54 @@ public interface ProjectService {
      * @throws ExceptionZyc 抛出的异常
      */
     Boolean deleteSoftwareCopyright(int softwareCopyrightId) throws ExceptionZyc;
+
+    /**
+     *  根据导师查询项目
+     * @param mentorId 导师id
+     * @return 查询集合
+     * @throws ExceptionZyc 抛出的异常
+     */
+    List<Project> findProjectByMentor(int mentorId, Pageable pageable) throws ExceptionZyc;
+
+
+    /**
+     *  查询项目
+     * @param name 项目名模糊查询
+     * @param projectLeader 负责人用户名
+     * @param mentorId 导师id
+     * @param pageable 分页
+     * @return 查询结果
+     * @throws ExceptionZyc 抛出异常
+     */
+    List<Project> findProjects(String name, String projectLeader,int mentorId, Pageable pageable) throws ExceptionZyc;
+
+    /**
+     * 查询专利
+     * @param projectId 项目id
+     * @param name 专利名
+     * @param patentId 专利号
+     * @return  查询结果
+     * @throws ExceptionZyc 抛出的异常
+     */
+    List<Patent> findPatentByProject(String name,String patentId,int projectId,Pageable pageable) throws ExceptionZyc;
+
+    /**
+     * 查询软件著作权
+     * @param name 软件著作权名
+     * @param projectId 项目id
+     * @param softwareCpoyrightId  登记号
+     * @return 查询结果
+     * @throws ExceptionZyc 抛出异常
+     */
+    List<SoftwareCopyright> findSoftwareByProject(String name,String softwareCpoyrightId,int projectId,Pageable pageable) throws ExceptionZyc;
+
+    /**
+     * 查询项目安排
+     * @param projectId 项目id
+     * @param mentorUsername 导师用户名
+     * @return 查询结果
+     * @throws ExceptionZyc 抛出的异常
+     */
+    List<Deal> findDealByProject(int projectId,String mentorUsername,Pageable pageable) throws ExceptionZyc;
+
 }

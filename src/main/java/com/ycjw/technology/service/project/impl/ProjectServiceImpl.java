@@ -14,14 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -80,7 +85,23 @@ public class ProjectServiceImpl implements ProjectService {
         }
         //条件满足，添加项目
         Project project = new Project(addProject);
+        //保存信息
         projectDao.save(project);
+        //项目负责人添加项目
+        mentor = mentorDao.findByUsername(project.getProjectLeader());
+        Set<Integer> projects = mentor.getProjects();
+        projects.add(project.getId());
+        mentor.setProjects(projects);
+        mentorDao.save(mentor);
+        //参与导师添加项目
+        for (String username:project.getMentorUsernames()
+             ) {
+            mentor = mentorDao.findByUsername(username);
+            projects = mentor.getProjects();
+            projects.add(project.getId());
+            mentor.setProjects(projects);
+            mentorDao.save(mentor);
+        }
         return project;
     }
 
@@ -546,7 +567,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public SoftwareCopyright modifySoftwareCopyright(int softwarerightId, MultipartFile softwareCopyrightPhoto) throws ExceptionZyc {
+    public SoftwareCopyright modifySoftwareCopyrightPhoto(int softwarerightId, MultipartFile softwareCopyrightPhoto) throws ExceptionZyc {
         //判断参数
         if(StringUtil.isEmpty(softwarerightId + "")){
             //参数为空，抛出异常
@@ -618,5 +639,131 @@ public class ProjectServiceImpl implements ProjectService {
         return true;
     }
 
+    @Override
+    public List<Project> findProjectByMentor(int mentorId, Pageable pageable) throws ExceptionZyc {
+        //判断参数
+        if(StringUtil.isEmpty(mentorId +"")){
+            //参数为空，抛出异常
+            throw ExceptionZyc.PARAM_IS_NULL;
+        }
+        //查询导师
+        Mentor mentor = mentorDao.findById(mentorId).orElse(null);
+        //判断导师是否为空
+        if(mentor == null){
+            //导师不存在
+            throw ExceptionZyc.MENTOR_IS_NOT_EXIST;
+        }
+        //返回查询结果
+        return projectDao.findByIdIn(mentor.getProjects(),pageable).getContent();
+    }
 
+    @Override
+    public List<Project> findProjects(String name, String projectLeader, int mentorId, Pageable pageable) throws ExceptionZyc {
+        List<Project> result = projectDao.findAll(new Specification<Project>() {
+            @Override
+            public Predicate toPredicate(Root<Project> root, CriteriaQuery<?> query, CriteriaBuilder cb){
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                if(!StringUtil.isEmpty(name)){
+                    list.add(cb.like(root.get("name").as(String.class),"%" + name + "%"));
+                }
+
+                if(!StringUtil.isEmpty(projectLeader)){
+                    list.add(cb.equal(root.get("projectLeader").as(String.class),projectLeader));
+                }
+
+                if(!StringUtil.isEmpty(mentorId + "")){
+                    //查询导师
+                    Mentor mentor = mentorDao.findById(mentorId).orElse(null);
+                    //判断导师是否为空
+                    if(mentor != null){
+                        CriteriaBuilder.In<Integer> in = cb.in(root.get("id"));
+                        for(int id:mentor.getProjects()){
+                            in.value(id);
+                        }
+                        list.add(in);
+                    }
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+            }
+        },pageable).getContent();
+        //返回结果
+        return result;
+    }
+
+    @Override
+    public List<Patent> findPatentByProject(String name, String patentId, int projectId,Pageable pageable) throws ExceptionZyc {
+        return patentDao.findAll(new Specification<Patent>(){
+            @Override
+            public Predicate toPredicate(Root<Patent> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                //查询条件几个
+                List<Predicate> list = new ArrayList<>();
+
+                if(!StringUtil.isEmpty(name)){
+                    list.add(criteriaBuilder.like(root.get("name").as(String.class),"%" + name + "%"));
+                }
+
+                if(!StringUtil.isEmpty(patentId)){
+                    list.add(criteriaBuilder.equal(root.get("patentId").as(String.class),patentId));
+                }
+
+                if(!StringUtil.isEmpty(projectId + "")){
+                    list.add(criteriaBuilder.equal(root.get("projectId").as(Integer.class),projectId));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        },pageable).getContent();
+    }
+
+    @Override
+    public List<SoftwareCopyright> findSoftwareByProject(String name, String softwareCpoyrightId, int projectId,Pageable pageable) throws ExceptionZyc {
+        return softwareCopyrightDao.findAll(new Specification<SoftwareCopyright>(){
+            @Override
+            public Predicate toPredicate(Root<SoftwareCopyright> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                //查询条件几个
+                List<Predicate> list = new ArrayList<>();
+
+                if(!StringUtil.isEmpty(name)){
+                    list.add(criteriaBuilder.like(root.get("name").as(String.class),"%" + name + "%"));
+                }
+
+                if(!StringUtil.isEmpty(softwareCpoyrightId)){
+                    list.add(criteriaBuilder.equal(root.get("softwareId").as(String.class),softwareCpoyrightId));
+                }
+
+                if(!StringUtil.isEmpty(projectId + "")){
+                    list.add(criteriaBuilder.equal(root.get("projectId").as(Integer.class),projectId));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        },pageable).getContent();
+    }
+
+    @Override
+    public List<Deal> findDealByProject(int projectId, String mentorUsername,Pageable pageable) throws ExceptionZyc {
+        return dealDao.findAll(new Specification<Deal>(){
+            @Override
+            public Predicate toPredicate(Root<Deal> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                //查询条件几个
+                List<Predicate> list = new ArrayList<>();
+
+                if(!StringUtil.isEmpty(mentorUsername)){
+                    list.add(criteriaBuilder.equal(root.get("mentorUsername").as(String.class),mentorUsername));
+                }
+
+                if(!StringUtil.isEmpty(projectId + "")){
+                    list.add(criteriaBuilder.equal(root.get("projectId").as(Integer.class),projectId));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        });
+    }
 }

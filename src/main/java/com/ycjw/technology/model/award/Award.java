@@ -1,5 +1,6 @@
 package com.ycjw.technology.model.award;
 
+import com.ycjw.technology.model.request.award.AddAward;
 import com.ycjw.technology.model.user.Mentor;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Reference;
@@ -15,8 +16,7 @@ public class Award {
     @ApiModelProperty("奖项ID")
     private int id;
     @ApiModelProperty("获奖者ID")
-    @OneToOne(targetEntity = Mentor.class)
-    private Mentor mentor;
+    private int mentorId;
     @ApiModelProperty("获奖排名")
     private String awardRank;
     @ApiModelProperty("获奖时间")
@@ -25,7 +25,19 @@ public class Award {
     private AwardLevel awardLevel;
     @ApiModelProperty("所属单位")
     private String department;
+    @ApiModelProperty("获奖证书")
+    private String awardPhoto;
 
+    public Award() {
+    }
+
+    public Award(AddAward addAward) {
+        this.mentorId = addAward.getMentorId();
+        this.awardRank = addAward.getAwardRank();
+        this.awardTime = addAward.getAwardTime();
+        this.awardLevel = addAward.getAwardLevel();
+        this.department = addAward.getDepartment();
+    }
 
     public enum AwardLevel{
         school,province,country,world
@@ -39,12 +51,12 @@ public class Award {
         this.id = id;
     }
 
-    public Mentor getMentor() {
-        return mentor;
+    public int getMentorId() {
+        return mentorId;
     }
 
-    public void setMentor(Mentor mentor) {
-        this.mentor = mentor;
+    public void setMentorId(int mentorId) {
+        this.mentorId = mentorId;
     }
 
     public String getAwardRank() {
@@ -77,5 +89,13 @@ public class Award {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getAwardPhoto() {
+        return awardPhoto;
+    }
+
+    public void setAwardPhoto(String awardPhoto) {
+        this.awardPhoto = awardPhoto;
     }
 }
